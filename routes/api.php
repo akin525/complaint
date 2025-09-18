@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('complaint', [ComplaintController::class, 'index']);
     // Complaint routes
     Route::apiResource('complaints', ComplaintController::class);
 
