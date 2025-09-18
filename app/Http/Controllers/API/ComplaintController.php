@@ -75,7 +75,7 @@ class ComplaintController extends Controller
             'category_id' => 'required|exists:complaint_categories,id',
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
-            'is_anonymous' => 'boolean',
+//            'is_anonymous' => 'boolean',
             'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,pdf,doc,docx|max:2048',
         ]);
 
@@ -131,8 +131,8 @@ class ComplaintController extends Controller
     {
         $user = $request->user();
         $complaint = Complaint::with([
-            'category', 
-            'status', 
+            'category',
+            'status',
             'user:id,name,email,student_id,department',
             'responses' => function ($query) use ($user) {
                 // If user is a student, only show non-private responses
