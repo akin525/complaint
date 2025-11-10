@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/statuses/{id}', [StatusController::class, 'show']);
 
     // Admin routes
-    Route::middleware('role:admin')->prefix('admin')->group(function () {
+    Route::middleware('role:admin,superadmin')->prefix('admin')->group(function () {
         // Dashboard
         Route::get('/dashboard', [AdminController::class, 'dashboard']);
 
@@ -63,8 +63,33 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/statuses/{id}', [StatusController::class, 'destroy']);
     });
 
+    // SuperAdmin routes
+    Route::middleware('role:superadmin')->prefix('superadmin')->group(function () {
+        // System statistics
+        Route::get('/stats', [\App\Http\Controllers\API\SuperAdminController::class, 'systemStats']);
+
+        // System settings
+        Route::get('/settings', [\App\Http\Controllers\API\SuperAdminController::class, 'getSettings']);
+        Route::post('/settings', [\App\Http\Controllers\API\SuperAdminController::class, 'updateSettings']);
+
+        // Maintenance mode
+        Route::post('/maintenance', [\App\Http\Controllers\API\SuperAdminController::class, 'toggleMaintenanceMode']);
+
+        // System logs
+        Route::get('/logs', [\App\Http\Controllers\API\SuperAdminController::class, 'getLogs']);
+        Route::delete('/logs', [\App\Http\Controllers\API\SuperAdminController::class, 'clearLogs']);
+
+        // Advanced user management
+        Route::put('/users/{id}/role', [\App\Http\Controllers\API\SuperAdminController::class, 'updateUserRole']);
+        Route::post('/users/bulk-delete', [\App\Http\Controllers\API\SuperAdminController::class, 'bulkDeleteUsers']);
+
+        // Data export
+        Route::post('/export', [\App\Http\Controllers\API\SuperAdminController::class, 'exportData']);
+    });
+
     // Staff routes
-    Route::middleware('role:admin,staff')->prefix('staff')->group(function () {
+    Route::middleware('role:admin,staff,superadmin')->prefix('staff')->group(function () {
         // Staff-specific routes can be added here
     });
 });
+
